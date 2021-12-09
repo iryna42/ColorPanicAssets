@@ -1157,7 +1157,6 @@ public class GameManager : MonoBehaviour
 			colorButtonsGroup[i].SetActive(i == id);
 		}
 
-		Debug.Log(id);
 		colorBtnsPosDrop.SetValueWithoutNotify(id);
 
 		saveData.buttonPosType = (ColorBtnsType)id;

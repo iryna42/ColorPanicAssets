@@ -58,7 +58,7 @@ public class CSVLoader
             if (fields.Length > attributeIndex)
 			{
                 string key = fields[0];
-                string value = fields[attributeIndex].TrimEnd(surround, '\n');
+                string value = fields[attributeIndex].TrimEnd(surround, '\n', '\r');
 
                 if (!dictionnary.ContainsKey(key))
 				{
