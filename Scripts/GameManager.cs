@@ -416,6 +416,10 @@ public class GameManager : MonoBehaviour
 		UpdateIngamePowerupBtn();
 		rewindText.SetActive(true);
 
+		// Random colors
+		if (saveData.randomColors)
+			RandomColors();
+
 		bool isRight = IsJoystickRight();
 
 		if (saveData.controlType == ContolType.fixedJoysick)
