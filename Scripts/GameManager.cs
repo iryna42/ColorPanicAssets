@@ -1198,6 +1198,9 @@ public class GameManager : MonoBehaviour
 
 	public void SetRandomColor(bool state)
 	{
+		blip.pitch = pitchRange.PickRandom();
+		blip.Play();
+
 		randomColors = state;
 		SaveData.Save(saveData);
 
