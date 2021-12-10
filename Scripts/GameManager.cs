@@ -155,6 +155,8 @@ public class GameManager : MonoBehaviour
 	[HideInInspector] public List<LocalisedText> localTexts;
 	[HideInInspector] public List<DropdownLocalisation> localDropdowns;
 
+	[HdieInInspector] public Rect btnsRect;
+
 	private void Awake()
 	{
 		instance = this;
@@ -474,6 +476,9 @@ public class GameManager : MonoBehaviour
 		gameCoroutines.Add(StartCoroutine(instantiateGrowing()));
 		gameCoroutines.Add(StartCoroutine(instantiateShrinking()));
 		gameCoroutines.Add(StartCoroutine(instantiateCoins()));
+
+		// Get buttons rect to prevent touches
+		btnsRect = colorButtonsGroup[(int)saveData.buttonPosType].GetComponent<RectTransform>().rect;
 	}
 
 	/// <summary>
