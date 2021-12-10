@@ -58,7 +58,10 @@ public class PlayerController : MonoBehaviour
 
 	private void Update()
 	{
+		// Select joystick
 		GameObject joystick = GameManager.IsJoystickRight() ? joystickRight : joystickLeft;
+		// Reset movement
+		relativePos = Vector2.zero;
 
 		// For computer testing
 		if (SystemInfo.deviceType == DeviceType.Desktop)
@@ -94,7 +97,8 @@ public class PlayerController : MonoBehaviour
 						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
 						if (touch.phase != TouchPhase.Began
-							&& (touchPos - lastPos).magnitude > minDistToMove)
+							&& (touchPos - lastPos).magnitude > minDistToMove
+							&& !IsTouchInFrobiddenRect(touchPos))
 						{
 							relativePos = (touchPos - lastPos);
 						}
@@ -117,22 +121,25 @@ public class PlayerController : MonoBehaviour
 					{
 						Touch touch = Input.GetTouch(0);
 
-						if (touch.phase == TouchPhase.Began)
+						if (!IsTouchInFrobiddenRect(touchPos))
 						{
-							slideStart = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
-							slideStartMarker = Instantiate(slideStartPrefab, (Vector3)slideStart + Vector3.forward, Quaternion.Euler(0, 0, 45));
-						}
-						else if (touch.phase == TouchPhase.Ended)
-						{
-							if (slideStartMarker != null)
+							if (touch.phase == TouchPhase.Began)
 							{
-								Destroy(slideStartMarker);
-								slideStartMarker = null;
+								slideStart = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
+								slideStartMarker = Instantiate(slideStartPrefab, (Vector3)slideStart + Vector3.forward, Quaternion.Euler(0, 0, 45));
 							}
-						}
-						else
-						{
-							relativePos = (Vector2)GameManager.instance.mainCam.ScreenToWorldPoint(touch.position) - slideStart;
+							else if (touch.phase == TouchPhase.Ended)
+							{
+								if (slideStartMarker != null)
+								{
+									Destroy(slideStartMarker);
+									slideStartMarker = null;
+								}
+							}
+							else
+							{
+								relativePos = (Vector2)GameManager.instance.mainCam.ScreenToWorldPoint(touch.position) - slideStart;
+							}
 						}
 					}
 					else
@@ -151,8 +158,11 @@ public class PlayerController : MonoBehaviour
 					{
 						Touch touch = Input.GetTouch(0);
 
-						Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
-						relativePos = worldPos - (Vector2)gameObject.transform.position;
+						if (!IsTouchInFrobiddenRect(touchPos))
+						{
+							Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
+							relativePos = worldPos - (Vector2)gameObject.transform.position;
+						}
 					}
 					else
 					{
@@ -166,11 +176,13 @@ public class PlayerController : MonoBehaviour
 					{
 						Touch touch = Input.GetTouch(0);
 
-						Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
-						relativePos = worldPos - (Vector2)joystick.transform.position;
+						if (!IsTouchInFrobiddenRect(touchPos))
+						{
+							Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
-						if (relativePos.magnitude > maxJoystickDistance)
-							relativePos = Vector2.zero;
+							if (relativePos.magnitude < maxJoystickDistance)
+								relativePos = worldPos - (Vector2)joystick.transform.position;
+						}
 					}
 					else
 					{
@@ -233,7 +245,7 @@ public class PlayerController : MonoBehaviour
 		mySR.color = GameManager.instance.saveData.colors[currentColorID];
 		myTR.startColor = myTR.endColor = GameManager.instance.saveData.colors[currentColorID];
 
-#pragma warning disable CS0618 // Le champ est obsolète mais flemme de recréer le PS a cause de la propriété
+#pragma warning disable CS0618 // Le champ est obsolï¿½te mais flemme de recrï¿½er le PS a cause de la propriï¿½tï¿½
 		Instantiate(colorChangePS, gameObject.transform).GetComponent<ParticleSystem>().startColor = GameManager.instance.saveData.colors[currentColorID];
 #pragma warning restore CS0618
 
@@ -282,5 +294,12 @@ public class PlayerController : MonoBehaviour
 			GameManager.instance.StopGame();
 			Instantiate(diePS, gameObject.transform.position, Quaternion.identity);
 		}
+	}
+
+	private void IsTouchInFrobiddenRect(Vector2 pos)
+	{
+		Rect rect = GameManager.instance.btnsRect;
+
+		return pos.x < rect.max.x && pos.x > rect.min.x && pos.y < rect.max.y && pos.y > rect.min.y
 	}
 }
