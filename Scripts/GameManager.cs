@@ -100,6 +100,8 @@ public class GameManager : MonoBehaviour
 	[SerializeField] List<GameObject> colorButtonsGroup;
 	[SerializeField] TMP_Dropdown colorBtnsPosDrop;
 	[SerializeField] Image randomColorBtn;
+	[SerializeField] GameObject randomColorPopup;
+	[SerializeField] Sprite[] randomColorBtnSprites;
  	[HideInInspector] public Camera mainCam;
 
 	[Space(20)]
@@ -1198,6 +1200,9 @@ public class GameManager : MonoBehaviour
 	{
 		randomColors = state;
 		SaveData.Save(saveData);
+
+		randomColorPopup.SetActive(state);
+		randomColorBtn.sprite = randomColorBtnSprites[state? 1 : 0];
 	}
 
 	public void ToggleRandomColor()
