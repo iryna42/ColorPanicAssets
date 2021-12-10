@@ -847,6 +847,27 @@ public class GameManager : MonoBehaviour
 		UpdateTheme();
 	}
 
+	public void RandomColors()
+	{
+		List<int> usedIndexes = new List<int>();
+		for (int i = 0; i < 3; i++)
+		{
+			int randomIndex = Random.Range(0, saveData.unlockedColors)
+			if (usedIndexes.Contains(randomIndex))
+			{
+				i--
+			}
+			else
+			{
+				usedIndexes.Add(randomIndex);
+				saveData.colors[i] = saveData.unlockedColors[randomIndex];
+			}
+		}
+
+		SaveData.Save(saveData);
+		UpdateTheme();
+	}
+
 	public void DefaultTheme()
 	{
 		blip.pitch = pitchRange.PickRandom();
