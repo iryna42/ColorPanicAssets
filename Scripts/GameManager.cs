@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] GameObject screenLeftCollider;
 	[SerializeField] List<GameObject> colorButtonsGroup;
 	[SerializeField] TMP_Dropdown colorBtnsPosDrop;
+	[SerializeField] Image randomColorBtn;
  	[HideInInspector] public Camera mainCam;
 
 	[Space(20)]
@@ -1193,12 +1194,21 @@ public class GameManager : MonoBehaviour
 		SaveData.Save(saveData);
 	}
 
+	public void SetRandomColor(bool state)
+	{
+		randomColors = state;
+		SaveData.Save(saveData);
+	}
+
+	public void ToggleRandomColor()
+	{
+		SetRandomColor(!saveData.randomColors);
+	}
+
 	public static bool IsJoystickRight()
 	{
 		return instance.saveData.buttonPosType == ColorBtnsType.left
 			|| instance.saveData.buttonPosType == ColorBtnsType.leftSpaced
 			|| instance.saveData.buttonPosType == ColorBtnsType.downLeft;
 	}
-
-
 }
