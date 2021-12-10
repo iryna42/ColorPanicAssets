@@ -856,10 +856,10 @@ public class GameManager : MonoBehaviour
 		List<int> usedIndexes = new List<int>();
 		for (int i = 0; i < 3; i++)
 		{
-			int randomIndex = Random.Range(0, saveData.unlockedColors)
+			int randomIndex = Random.Range(0, saveData.unlockedColors);
 			if (usedIndexes.Contains(randomIndex))
 			{
-				i--
+				i--;
 			}
 			else
 			{
@@ -1199,4 +1199,6 @@ public class GameManager : MonoBehaviour
 			|| instance.saveData.buttonPosType == ColorBtnsType.leftSpaced
 			|| instance.saveData.buttonPosType == ColorBtnsType.downLeft;
 	}
+
+
 }
