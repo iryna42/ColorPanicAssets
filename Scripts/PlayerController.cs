@@ -66,9 +66,6 @@ public class PlayerController : MonoBehaviour
 		// For computer testing
 		if (SystemInfo.deviceType == DeviceType.Desktop)
 		{
-			//check mouse
-			relativePos = Vector2.zero;
-
 			if (Input.GetMouseButtonDown(0))
 			{
 				slideStart = GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition);
@@ -98,7 +95,7 @@ public class PlayerController : MonoBehaviour
 
 						if (touch.phase != TouchPhase.Began
 							&& (touchPos - lastPos).magnitude > minDistToMove
-							&& !IsTouchInFrobiddenRect(touchPos))
+							&& !IsTouchInFrobiddenRect(touch.position))
 						{
 							relativePos = (touchPos - lastPos);
 						}
@@ -122,7 +119,7 @@ public class PlayerController : MonoBehaviour
 						Touch touch = Input.GetTouch(0);
 						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
-						if (!IsTouchInFrobiddenRect(touchPos))
+						if (!IsTouchInFrobiddenRect(touch.position))
 						{
 							if (touch.phase == TouchPhase.Began)
 							{
@@ -160,7 +157,7 @@ public class PlayerController : MonoBehaviour
 						Touch touch = Input.GetTouch(0);
 						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
-						if (!IsTouchInFrobiddenRect(touchPos))
+						if (!IsTouchInFrobiddenRect(touch.position))
 						{
 							relativePos = touchPos - (Vector2)gameObject.transform.position;
 						}
@@ -178,7 +175,7 @@ public class PlayerController : MonoBehaviour
 						Touch touch = Input.GetTouch(0);
 						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
-						if (!IsTouchInFrobiddenRect(touchPos))
+						if (!IsTouchInFrobiddenRect(touch.position))
 						{
 							if (relativePos.magnitude < maxJoystickDistance)
 								relativePos = touchPos - (Vector2)joystick.transform.position;
@@ -298,8 +295,10 @@ public class PlayerController : MonoBehaviour
 
 	private bool IsTouchInFrobiddenRect(Vector2 pos)
 	{
-		Rect rect = GameManager.instance.btnsRect;
-
-		return pos.x < rect.max.x && pos.x > rect.min.x && pos.y < rect.max.y && pos.y > rect.min.y;
+		if (GameManager.instance.btnsRect != null)
+		{
+			return RectTransformUtility.RectangleContainsScreenPoint(GameManager.instance.btnsRect, pos, GameManager.instance.mainCam);
+		}
+		else return false;
 	}
 }
