@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
 	[HideInInspector] public List<LocalisedText> localTexts;
 	[HideInInspector] public List<DropdownLocalisation> localDropdowns;
 
-	[HdieInInspector] public Rect btnsRect;
+	[HideInInspector] public Rect btnsRect;
 
 	private void Awake()
 	{
@@ -274,6 +274,8 @@ public class GameManager : MonoBehaviour
 		SetVolume(saveData.soundsVolume);
 		SetControlType((int)saveData.controlType);
 		ChangeColorBtnsPosition((int)saveData.buttonPosType);
+
+		randomColorPopup.SetActive(false);
 	}
 
 	private void Update()
@@ -859,7 +861,7 @@ public class GameManager : MonoBehaviour
 		List<int> usedIndexes = new List<int>();
 		for (int i = 0; i < 3; i++)
 		{
-			int randomIndex = Random.Range(0, saveData.unlockedColors);
+			int randomIndex = Random.Range(0, saveData.unlockedColors.Count);
 			if (usedIndexes.Contains(randomIndex))
 			{
 				i--;
@@ -1201,7 +1203,7 @@ public class GameManager : MonoBehaviour
 		blip.pitch = pitchRange.PickRandom();
 		blip.Play();
 
-		randomColors = state;
+		saveData.randomColors = state;
 		SaveData.Save(saveData);
 
 		randomColorPopup.SetActive(state);
