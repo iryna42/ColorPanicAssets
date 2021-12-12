@@ -99,6 +99,9 @@ public class GameManager : MonoBehaviour
 	[SerializeField] GameObject screenLeftCollider;
 	[SerializeField] List<GameObject> colorButtonsGroup;
 	[SerializeField] TMP_Dropdown colorBtnsPosDrop;
+	[SerializeField] Image randomColorBtn;
+	[SerializeField] GameObject randomColorPopup;
+	[SerializeField] Sprite[] randomColorBtnSprites;
  	[HideInInspector] public Camera mainCam;
 
 	[Space(20)]
@@ -154,6 +157,8 @@ public class GameManager : MonoBehaviour
 
 	[HideInInspector] public List<LocalisedText> localTexts;
 	[HideInInspector] public List<DropdownLocalisation> localDropdowns;
+
+	[HdieInInspector] public Rect btnsRect;
 
 	private void Awake()
 	{
@@ -414,6 +419,10 @@ public class GameManager : MonoBehaviour
 		UpdateIngamePowerupBtn();
 		rewindText.SetActive(true);
 
+		// Random colors
+		if (saveData.randomColors)
+			RandomColors();
+
 		bool isRight = IsJoystickRight();
 
 		if (saveData.controlType == ContolType.fixedJoysick)
@@ -474,6 +483,9 @@ public class GameManager : MonoBehaviour
 		gameCoroutines.Add(StartCoroutine(instantiateGrowing()));
 		gameCoroutines.Add(StartCoroutine(instantiateShrinking()));
 		gameCoroutines.Add(StartCoroutine(instantiateCoins()));
+
+		// Get buttons rect to prevent touches
+		btnsRect = colorButtonsGroup[(int)saveData.buttonPosType].GetComponent<RectTransform>().rect;
 	}
 
 	/// <summary>
@@ -842,6 +854,27 @@ public class GameManager : MonoBehaviour
 		UpdateTheme();
 	}
 
+	public void RandomColors()
+	{
+		List<int> usedIndexes = new List<int>();
+		for (int i = 0; i < 3; i++)
+		{
+			int randomIndex = Random.Range(0, saveData.unlockedColors);
+			if (usedIndexes.Contains(randomIndex))
+			{
+				i--;
+			}
+			else
+			{
+				usedIndexes.Add(randomIndex);
+				saveData.colors[i] = saveData.unlockedColors[randomIndex];
+			}
+		}
+
+		SaveData.Save(saveData);
+		UpdateTheme();
+	}
+
 	public void DefaultTheme()
 	{
 		blip.pitch = pitchRange.PickRandom();
@@ -1161,6 +1194,23 @@ public class GameManager : MonoBehaviour
 
 		saveData.buttonPosType = (ColorBtnsType)id;
 		SaveData.Save(saveData);
+	}
+
+	public void SetRandomColor(bool state)
+	{
+		blip.pitch = pitchRange.PickRandom();
+		blip.Play();
+
+		randomColors = state;
+		SaveData.Save(saveData);
+
+		randomColorPopup.SetActive(state);
+		randomColorBtn.sprite = randomColorBtnSprites[state? 1 : 0];
+	}
+
+	public void ToggleRandomColor()
+	{
+		SetRandomColor(!saveData.randomColors);
 	}
 
 	public static bool IsJoystickRight()

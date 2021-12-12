@@ -20,6 +20,7 @@ public class SaveData
 
     public Color[] colors = GameManager.instance.defaultColors;
 	public List<Color> unlockedColors = new List<Color>();
+	public bool randomColors = false;
 
 	public float soundsVolume = 1;
 	public bool vibrationOn = true;
