@@ -99,9 +99,8 @@ public class GameManager : MonoBehaviour
 	[SerializeField] GameObject screenLeftCollider;
 	[SerializeField] List<GameObject> colorButtonsGroup;
 	[SerializeField] TMP_Dropdown colorBtnsPosDrop;
-	[SerializeField] Image randomColorBtn;
+	[SerializeField] GameObject randomColorBtnCross;
 	[SerializeField] GameObject randomColorPopup;
-	[SerializeField] Sprite[] randomColorBtnSprites;
  	[HideInInspector] public Camera mainCam;
 
 	[Space(20)]
@@ -189,6 +188,7 @@ public class GameManager : MonoBehaviour
 		UpdateMainMenuScores();
 		UpdateTheme();
 		SetCurrentColor(0);
+		SetRandomColor(saveData.randomColors);
 
 		ChangeLanguageAdvanced(saveData.language, false);
 
@@ -274,8 +274,6 @@ public class GameManager : MonoBehaviour
 		SetVolume(saveData.soundsVolume);
 		SetControlType((int)saveData.controlType);
 		ChangeColorBtnsPosition((int)saveData.buttonPosType);
-
-		randomColorPopup.SetActive(false);
 	}
 
 	private void Update()
@@ -1207,7 +1205,7 @@ public class GameManager : MonoBehaviour
 		SaveData.Save(saveData);
 
 		randomColorPopup.SetActive(state);
-		randomColorBtn.sprite = randomColorBtnSprites[state? 1 : 0];
+		randomColorBtnCross.SetActive(state);
 	}
 
 	public void ToggleRandomColor()

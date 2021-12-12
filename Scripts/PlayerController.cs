@@ -120,12 +120,13 @@ public class PlayerController : MonoBehaviour
 					if (Input.touchCount > 0)
 					{
 						Touch touch = Input.GetTouch(0);
+						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
 						if (!IsTouchInFrobiddenRect(touchPos))
 						{
 							if (touch.phase == TouchPhase.Began)
 							{
-								slideStart = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
+								slideStart = touchPos;
 								slideStartMarker = Instantiate(slideStartPrefab, (Vector3)slideStart + Vector3.forward, Quaternion.Euler(0, 0, 45));
 							}
 							else if (touch.phase == TouchPhase.Ended)
@@ -157,11 +158,11 @@ public class PlayerController : MonoBehaviour
 					if (Input.touchCount > 0)
 					{
 						Touch touch = Input.GetTouch(0);
+						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
 						if (!IsTouchInFrobiddenRect(touchPos))
 						{
-							Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
-							relativePos = worldPos - (Vector2)gameObject.transform.position;
+							relativePos = touchPos - (Vector2)gameObject.transform.position;
 						}
 					}
 					else
@@ -175,13 +176,12 @@ public class PlayerController : MonoBehaviour
 					if (Input.touchCount > 0)
 					{
 						Touch touch = Input.GetTouch(0);
+						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
 
 						if (!IsTouchInFrobiddenRect(touchPos))
 						{
-							Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
-
 							if (relativePos.magnitude < maxJoystickDistance)
-								relativePos = worldPos - (Vector2)joystick.transform.position;
+								relativePos = touchPos - (Vector2)joystick.transform.position;
 						}
 					}
 					else
@@ -296,10 +296,10 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	private void IsTouchInFrobiddenRect(Vector2 pos)
+	private bool IsTouchInFrobiddenRect(Vector2 pos)
 	{
 		Rect rect = GameManager.instance.btnsRect;
 
-		return pos.x < rect.max.x && pos.x > rect.min.x && pos.y < rect.max.y && pos.y > rect.min.y
+		return pos.x < rect.max.x && pos.x > rect.min.x && pos.y < rect.max.y && pos.y > rect.min.y;
 	}
 }
