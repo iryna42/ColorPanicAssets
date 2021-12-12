@@ -60,8 +60,10 @@ public class PlayerController : MonoBehaviour
 	{
 		// Select joystick
 		GameObject joystick = GameManager.IsJoystickRight() ? joystickRight : joystickLeft;
+
 		// Reset movement
-		relativePos = Vector2.zero;
+		if (GameManager.instance.saveData.controlType != ContolType.fingerDirection)
+			relativePos = Vector2.zero;
 
 		// For computer testing
 		if (SystemInfo.deviceType == DeviceType.Desktop)
