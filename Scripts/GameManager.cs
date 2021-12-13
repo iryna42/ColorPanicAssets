@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] TMP_Dropdown colorBtnsPosDrop;
 	[SerializeField] GameObject randomColorBtnCross;
 	[SerializeField] GameObject randomColorPopup;
+	[SerializeField] Transform pauseObjParents;
  	[HideInInspector] public Camera mainCam;
 
 	[Space(20)]
@@ -602,6 +603,7 @@ public class GameManager : MonoBehaviour
 			music.Pause();
 			noise.Play();
 			player.GetComponent<PlayerController>().canMove = false;
+			UpdatePauseObjs();
 		}
 		else
 		{
@@ -775,6 +777,27 @@ public class GameManager : MonoBehaviour
 		maxWithoutMove = 0;
 
 		SaveObjs();
+	}
+
+	private void UpdatePauseObjs()
+	{
+		// TODO: Check this
+
+		for (int i = 0; i < 3; i++)
+		{
+			ObjectiveDisplay display;
+
+			if (pauseObjParents.GetChild(i) == null)
+			{
+				display = Instantiate(objDisplayPrefab, pauseObjParents).GetComponent<ObjectiveDisplay>();
+			}
+			else
+			{
+				display = pauseObjParents.GetChild(i).gameObject.GetComponent<ObjectiveDisplay>();
+			}
+
+			display.ShowObj(objectives[i], i); 
+		}
 	}
 
 	private void SaveObjs()

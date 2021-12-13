@@ -23,9 +23,11 @@ public class GrowingShape : Shape
         Vector3 pos;
         Vector2 delta = Vector2.zero;
 
+        // TODO: check this, always the same pos
         while (delta.magnitude < minPlayerDistance)
 		{
             pos = new Vector3(Random.Range(positionMin.x, positionMax.x), Random.Range(positionMin.y, positionMax.y), 0);
+            Debug.Log(pos);
             delta = (Vector2)GameManager.instance.player.transform.position - (Vector2)pos;
         }
 
