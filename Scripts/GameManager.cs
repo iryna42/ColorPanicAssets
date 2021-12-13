@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
 	[Space(20)]
 
 	[SerializeField] TextMeshProUGUI scoreText;
-	[SerializeField] GameObject player;
+	public GameObject player;
 	[SerializeField] TextMeshProUGUI lastScoreText;
 	[SerializeField] TextMeshProUGUI bestScoreText;
 	[SerializeField] PostProcessVolume rewindPP;
@@ -136,6 +136,7 @@ public class GameManager : MonoBehaviour
 	[System.NonSerialized] public Objective[] objectives;
 	[SerializeField] private int skipObjPrice;
 	private bool skippingObjs = false;
+	[HideInInspector] public bool mustIgnoreCorruptedSave = false;
 
 	public Objective[] objTemplate;
 
@@ -174,7 +175,22 @@ public class GameManager : MonoBehaviour
 	private IEnumerator Start()
 	{
 		saveData = SaveData.Load();
+
 		initMenus();
+
+		if (saveData == null)
+		{
+			player.SetActive(false);
+			ChangeLanguageAdvanced(Language.system, false, false);
+			SwitchMenu("CorruptedSave");
+
+			yield return new WaitUntil(() => mustIgnoreCorruptedSave);
+
+			saveData = new SaveData();
+			saveData.nbGames = 1;
+
+			SwitchMenu("Main");
+		}
 
 		//if (PlayerPrefs.HasKey("Difficulty"))
 		//	SetDifficulty(PlayerPrefs.GetInt("Difficulty"));
@@ -716,6 +732,11 @@ public class GameManager : MonoBehaviour
 		yield return null;
 	}
 
+	public void IgnoreCorruptedSave()
+	{
+		mustIgnoreCorruptedSave = true;
+	}
+
 	///// Objs
 
 	/// <summary>
@@ -1152,7 +1173,7 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 	/// Change game language
 	/// </summary>
-	public void ChangeLanguageAdvanced(Language id, bool updateUI = true)
+	public void ChangeLanguageAdvanced(Language id, bool updateUI = true, bool save = true)
 	{
 		languageDropdown.SetValueWithoutNotify((int)id);
 
@@ -1171,9 +1192,11 @@ public class GameManager : MonoBehaviour
 			} 
 		}
 
-		saveData.language = id;
-		SaveData.Save(saveData);
-
+		if (save)
+		{
+			saveData.language = id;
+			SaveData.Save(saveData); 
+		}
 	}
 
 	public void ChangeLanguage(int id)
@@ -1215,6 +1238,9 @@ public class GameManager : MonoBehaviour
 
 	public static bool IsJoystickRight()
 	{
+		if (instance.saveData == null)
+			return false;
+
 		return instance.saveData.buttonPosType == ColorBtnsType.left
 			|| instance.saveData.buttonPosType == ColorBtnsType.leftSpaced
 			|| instance.saveData.buttonPosType == ColorBtnsType.downLeft;

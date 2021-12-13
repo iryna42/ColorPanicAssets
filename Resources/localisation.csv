@@ -53,3 +53,7 @@
 "btns pos","Buttons position:","Position des boutons :","Позиция кнопок"
 "rndm col title","Random colors","Couleurs aléatoires"
 "rndm col desc","The colors will be chosen randomly for each game","Les couleurs seront choisies aléatoirement à chaque partie"
+"unreadable save","Unreadable save","Sauvegarde illisible"
+"unr save exp 1","The game was unable to read your save file!","Le jeu n'a pas réussi à lire votre fichier de sauvegarde!"
+"unr save exp 2","If you have not attempted to modify the save, please report this bug.","Si vous n'avez pas essayé de modifier la sauvegarde, veuillez reporter ce bug."
+"unr save exp 3","If you continue, the current save file will be definitely lost.","Si vous continuez, le fichier actuel sera définitivement perdu."

@@ -17,6 +17,9 @@ public class ThemeBtn : MonoBehaviour
 	{
 		get
 		{
+			if (GameManager.instance.saveData == null)
+				return false;
+
 			return GameManager.instance.saveData.unlockedColors.Any(c => Utility.CompareColors(c, color));
 		}
 	}

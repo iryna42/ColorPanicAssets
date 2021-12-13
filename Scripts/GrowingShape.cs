@@ -9,6 +9,9 @@ public class GrowingShape : Shape
     //public Range growSpeedRange;//Min and max for growSpeed field
     //public Range rotationSpeedRange;//Min and max for rotationSpeed field
 
+    [Tooltip("Minimum distance btw player and shape to spawn")]
+    public float minPlayerDistance = 1.5f;
+
     float growSpeed;//scale multiplicator for 1s
     float rotationSpeed;//add this rotation each sec
     float startTime;
@@ -17,7 +20,15 @@ public class GrowingShape : Shape
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.transform.position = new Vector3(Random.Range(positionMin.x, positionMax.x), Random.Range(positionMin.y, positionMax.y), 0);
+        Vector3 pos;
+        Vector2 delta = Vector2.zero;
+
+        while (delta.magnitude < minPlayerDistance)
+		{
+            pos = new Vector3(Random.Range(positionMin.x, positionMax.x), Random.Range(positionMin.y, positionMax.y), 0);
+            delta = (Vector2)GameManager.instance.player.transform.position - (Vector2)pos;
+        }
+
         gameObject.transform.localScale = Vector3.zero;
 
         growSpeed = sizeSpeedRange.PickRandom();

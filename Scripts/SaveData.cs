@@ -50,8 +50,8 @@ public class SaveData
 				}
 				catch (System.Exception e)
 				{
-					Debug.LogError("Can't read save XML file, Creating new save data :\n" + e.Message);
-					return new SaveData();
+					Debug.LogError("Can't read save XML file :\n" + e.Message);
+					return null;
 				}
 			};
 		}
