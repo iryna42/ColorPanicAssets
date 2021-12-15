@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -135,7 +136,7 @@ public struct ImageColor
 	public int colorID;
 }
 
-class Utility
+static class Utility
 {
 	public static bool CompareColors(Color a, Color b)
 	{
@@ -144,5 +145,10 @@ class Utility
 		float distB = Mathf.Abs(a.b - b.b);
 
 		return distB < 0.05f && distG < 0.05f && distR < 0.05f;
+	}
+
+	public static Vector2 RandomPosition(this Rect rect)
+	{
+		return new Vector2(Random.Range(rect.xMin, rect.xMax), Random.Range(rect.yMin, rect.yMax));
 	}
 }

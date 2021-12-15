@@ -53,8 +53,8 @@ public class ObjectiveDisplay : MonoBehaviour
 		UpdateValues(obj);
 		PlaceUI(placeIndex);
 
-		LeanTween.scale(gameObject, Vector3.one, FADE_DURATION);
-		LeanTween.alphaCanvas(globalCanvas, 1, FADE_DURATION);
+		LeanTween.scale(gameObject, Vector3.one, FADE_DURATION).setIgnoreTimeScale(true);
+		LeanTween.alphaCanvas(globalCanvas, 1, FADE_DURATION).setIgnoreTimeScale(true);
 	}
 
 	/// <summary>

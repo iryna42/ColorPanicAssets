@@ -7385,15 +7385,17 @@ MonoBehaviour:
   timeBtwCoins:
     min: 4
     max: 7
-  coinPosX:
-    min: -2.3
-    max: 2.3
-  coinPosY:
-    min: -4.3
-    max: 4.3
+  coinScreenDistance: 0.5
+  coinRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   scoreMultiplier: 1
   currentDifficulty: 0
   scoreText: {fileID: 776840568}
+  pauseScoreText: {fileID: 1590978177}
   player: {fileID: 4028596968658081998}
   lastScoreText: {fileID: 1883459016}
   bestScoreText: {fileID: 1118352065}
@@ -12550,7 +12552,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.5, y: -400.00006}
+  m_AnchoredPosition: {x: 150.5, y: -400.00015}
   m_SizeDelta: {x: 300, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &840114645
@@ -16201,7 +16203,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -62.31265}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1044589136
@@ -25237,7 +25239,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316546442}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -43380,7 +43382,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1871982225}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

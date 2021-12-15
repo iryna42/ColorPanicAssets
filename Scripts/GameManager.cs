@@ -40,8 +40,8 @@ public class GameManager : MonoBehaviour
 	public DifficultyRange timeBtwGrowShapes;
 	public DifficultyRange timeBtwShrinkShapes;
 	public Range timeBtwCoins;
-	public Range coinPosX;
-	public Range coinPosY;
+	public float coinScreenDistance;
+	[HideInInspector] public Rect coinRect;
 
 	float scoreStartTime;
 	public float scoreMultiplier = 1;
@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
 	[Space(20)]
 
 	[SerializeField] TextMeshProUGUI scoreText;
+	[SerializeField] TextMeshProUGUI pauseScoreText;
 	public GameObject player;
 	[SerializeField] TextMeshProUGUI lastScoreText;
 	[SerializeField] TextMeshProUGUI bestScoreText;
@@ -291,11 +292,19 @@ public class GameManager : MonoBehaviour
 		SetVolume(saveData.soundsVolume);
 		SetControlType((int)saveData.controlType);
 		ChangeColorBtnsPosition((int)saveData.buttonPosType);
+
+		// Set coin rect
+		float screenXunit = mainCam.orthographicSize / Screen.height * Screen.width;
+		coinRect = Rect.MinMaxRect(-screenXunit + coinScreenDistance,
+			-mainCam.orthographicSize + coinScreenDistance,
+			screenXunit - coinScreenDistance,
+			mainCam.orthographicSize - coinScreenDistance);
 	}
 
 	private void Update()
 	{
 		scoreText.text = score.ToString();
+		pauseScoreText.text = score.ToString();
 
 		//delete growing shapes by grop of 3
 		if (readyToDestroy.Count >= 3)
@@ -351,7 +360,7 @@ public class GameManager : MonoBehaviour
 		while (true)
 		{
 			GameObject newCoin = Instantiate(coinPrefab);
-			newCoin.transform.position = new Vector3(coinPosX.PickRandom(), coinPosY.PickRandom(), 0);
+			newCoin.transform.position = coinRect.RandomPosition();
 
 			yield return new WaitForSeconds(timeBtwCoins.PickRandom());
 		}
@@ -787,7 +796,7 @@ public class GameManager : MonoBehaviour
 		{
 			ObjectiveDisplay display;
 
-			if (pauseObjParents.GetChild(i) == null)
+			if (pauseObjParents.childCount <= i || pauseObjParents.GetChild(i) == null)
 			{
 				display = Instantiate(objDisplayPrefab, pauseObjParents).GetComponent<ObjectiveDisplay>();
 			}
