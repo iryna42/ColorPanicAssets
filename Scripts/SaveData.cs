@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml.Serialization;
 using UnityEngine;
 
@@ -31,7 +32,9 @@ public class SaveData
 
     public static void Save(SaveData data)
 	{
+		// Clear file
 		File.WriteAllText(Application.persistentDataPath + "/save", string.Empty);
+
 		using (var stream = File.Open(Application.persistentDataPath + "/save", FileMode.OpenOrCreate))
 		{
 			new XmlSerializer(typeof(SaveData)).Serialize(stream, data);
@@ -46,11 +49,12 @@ public class SaveData
 			{
 				try
 				{
+
 					return new XmlSerializer(typeof(SaveData)).Deserialize(stream) as SaveData;
 				}
 				catch (System.Exception e)
 				{
-					Debug.LogError("Can't read save XML file :\n" + e.Message);
+					Debug.LogError("Can't read save file :\n" + e.Message);
 					return null;
 				}
 			};
