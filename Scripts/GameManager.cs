@@ -677,7 +677,9 @@ public class GameManager : MonoBehaviour
 
 	public IEnumerator CameraShake()
 	{
+#if UNITY_IOS || UNITY_ANDROID
 		if (saveData.vibrationOn) Handheld.Vibrate();
+# endif
 
 		for (float t = 0; t < cameraShakeDuration; t += Time.deltaTime)
 		{
@@ -1172,7 +1174,9 @@ public class GameManager : MonoBehaviour
 	public void ChangeVibration()
 	{
 		saveData.vibrationOn = !saveData.vibrationOn;
+#if UNITY_IOS || UNITY_ANDROID
 		if (saveData.vibrationOn) Handheld.Vibrate();
+#endif
 
 		SaveData.Save(saveData);
 	}
