@@ -90,16 +90,20 @@ public class GameManager : MonoBehaviour
 	[SerializeField] Sprite[] powerupIcons;
 	[SerializeField] TextMeshProUGUI ingamePowerupTxt;
 	[SerializeField] Slider volumeSlider;
+	[SerializeField] Slider volumeSliderWebGL;
 	[SerializeField] ParticleSystem noMoneyPS;
 	[SerializeField] TextMeshProUGUI colorPriceText;
 	[SerializeField] TMP_Dropdown controlTypeDropdown;
+	[SerializeField] TMP_Dropdown controlTypeDropdownWebGL;
 	[SerializeField] GameObject joystickLeft;
 	[SerializeField] GameObject joystickRight;
 	[SerializeField] TMP_Dropdown languageDropdown;
+	[SerializeField] TMP_Dropdown languageDropdownWebGL;
 	[SerializeField] GameObject screenRightCollider;
 	[SerializeField] GameObject screenLeftCollider;
 	[SerializeField] List<GameObject> colorButtonsGroup;
 	[SerializeField] TMP_Dropdown colorBtnsPosDrop;
+	[SerializeField] TMP_Dropdown colorBtnsPosDropWebGL;
 	[SerializeField] GameObject randomColorBtnCross;
 	[SerializeField] GameObject randomColorPopup;
 	[SerializeField] Transform pauseObjParents;
@@ -226,6 +230,8 @@ public class GameManager : MonoBehaviour
 
 			////TUTORIAL
 
+			colorButtonsGroup.ForEach(el => el.SetActive(false));
+			colorBtnsCanvas.gameObject.SetActive(true);
 			colorBtnsCanvas.interactable = false;
 			colorBtnsCanvas.alpha = 0;
 
@@ -275,9 +281,9 @@ public class GameManager : MonoBehaviour
 			tutoBtnsInsructions.SetActive(false);
 
 			scoreStartTime = Time.time;
-			StopGame();
 			gameCoroutines.Add(StartCoroutine(instantiateGrowing()));
 			gameCoroutines.Add(StartCoroutine(instantiateShrinking()));
+			gameCoroutines.Add(StartCoroutine(instantiateCoins()));
 		}
 
 		if (saveData.unlockedColors.Count == 0)
@@ -1167,6 +1173,13 @@ public class GameManager : MonoBehaviour
 	}
 
 	///// Settings
+		
+	public void OpenSettings()
+	{
+		if (SystemInfo.deviceType == DeviceType.Desktop)
+			SwitchMenu("SettingsWebGL");
+		else SwitchMenu("Settings");
+	}
 
 	/// <summary>
 	/// Enables or disables vibration, update UI, save setting
@@ -1192,6 +1205,7 @@ public class GameManager : MonoBehaviour
 		SaveData.Save(saveData);
 
 		volumeSlider.value = volume;
+		volumeSliderWebGL.value = volume;
 	}
 
 	/// <summary>
@@ -1203,7 +1217,8 @@ public class GameManager : MonoBehaviour
 		saveData.controlType = (ContolType)id;
 		SaveData.Save(saveData);
 
-		controlTypeDropdown.SetValueWithoutNotify(id);
+		if (id < 4) controlTypeDropdown.SetValueWithoutNotify(id);
+		controlTypeDropdownWebGL.SetValueWithoutNotify(id);
 	}
 
 	/// <summary>
@@ -1212,6 +1227,7 @@ public class GameManager : MonoBehaviour
 	public void ChangeLanguageAdvanced(Language id, bool updateUI = true, bool save = true)
 	{
 		languageDropdown.SetValueWithoutNotify((int)id);
+		languageDropdownWebGL.SetValueWithoutNotify((int)id);
 
 		LocalisationSystem.ChangeLanguage(id);
 
@@ -1250,6 +1266,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		colorBtnsPosDrop.SetValueWithoutNotify(id);
+		colorBtnsPosDropWebGL.SetValueWithoutNotify(id);
 
 		saveData.buttonPosType = (ColorBtnsType)id;
 		SaveData.Save(saveData);

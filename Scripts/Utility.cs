@@ -124,10 +124,10 @@ public enum Language
 }
 
 [System.Serializable]
-public enum ContolType { fingerDirection, moveTowardsFinger, relativeToStart, fixedJoysick }
+public enum ContolType { fingerDirection, moveTowardsFinger, relativeToStart, fixedJoysick, arrows, WASD, ZQSD }
 
 [System.Serializable]
-public enum ColorBtnsType { left, leftSpaced, downLeft, downRight, right, rightSpace }
+public enum ColorBtnsType { left, leftSpaced, downLeft, downRight, right, rightSpace, numbers }
 
 [System.Serializable]
 public struct ImageColor

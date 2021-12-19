@@ -68,20 +68,119 @@ public class PlayerController : MonoBehaviour
 		// For computer testing
 		if (SystemInfo.deviceType == DeviceType.Desktop)
 		{
-			if (Input.GetMouseButtonDown(0))
+			switch (GameManager.instance.saveData.controlType)
 			{
-				slideStart = GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition);
-				slideStartMarker = Instantiate(slideStartPrefab, (Vector3)slideStart + Vector3.forward, Quaternion.Euler(0, 0, 45));
+				case ContolType.fingerDirection:
+					if (Input.GetMouseButton(0) && !Input.GetMouseButtonDown(0))
+					{
+						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition);
+
+						if ((touchPos - lastPos).magnitude > minDistToMove
+							&& !IsTouchInFrobiddenRect(Input.mousePosition))
+						{
+							relativePos = (touchPos - lastPos);
+						}
+
+						lastPos = touchPos;
+
+						//Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(touch.position);
+						//relativePos = touchPos - slideStart;
+						//slideStart = touchPos;
+					}
+					else
+					{
+						relativePos = Vector2.zero;
+					}
+					break;
+
+
+				case ContolType.moveTowardsFinger:
+					if (Input.GetMouseButton(0))
+					{
+						Vector2 touchPos = GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition);
+
+						if (!IsTouchInFrobiddenRect(Input.mousePosition))
+						{
+							relativePos = touchPos - (Vector2)gameObject.transform.position;
+						}
+					}
+					else
+					{
+						relativePos = Vector2.zero;
+					}
+					break;
+
+
+				case ContolType.relativeToStart:
+					if (Input.GetMouseButtonDown(0))
+					{
+						slideStart = GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition);
+						slideStartMarker = Instantiate(slideStartPrefab, (Vector3)slideStart + Vector3.forward, Quaternion.Euler(0, 0, 45));
+					}
+					else if (Input.GetMouseButtonUp(0) && slideStartMarker != null)
+					{
+						Destroy(slideStartMarker);
+						slideStartMarker = null;
+						relativePos = Vector2.zero;
+					}
+					else if (Input.GetMouseButton(0))
+					{
+						relativePos = (Vector2)GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition) - slideStart;
+					}
+					break;
+
+
+				case ContolType.fixedJoysick:
+					if (Input.GetMouseButton(0))
+					{
+						Vector2 mousePos = Input.mousePosition;
+						Vector2 worldPos = GameManager.instance.mainCam.ScreenToWorldPoint(mousePos);
+
+						if (!IsTouchInFrobiddenRect(mousePos))
+						{
+							if (relativePos.magnitude < maxJoystickDistance)
+								relativePos = worldPos - (Vector2)joystick.transform.position;
+						}
+						else
+						{
+							relativePos = Vector2.zero;
+						}
+					}
+					break;
+
+
+				case ContolType.arrows:
+					if (Input.GetKey(KeyCode.DownArrow))
+						relativePos += Vector2.down;
+					if (Input.GetKey(KeyCode.UpArrow))
+						relativePos += Vector2.up;
+					if (Input.GetKey(KeyCode.LeftArrow))
+						relativePos += Vector2.left;
+					if (Input.GetKey(KeyCode.RightArrow))
+						relativePos += Vector2.right;
+					break;
+				case ContolType.WASD:
+					if (Input.GetKey(KeyCode.S))
+						relativePos += Vector2.down;
+					if (Input.GetKey(KeyCode.W))
+						relativePos += Vector2.up;
+					if (Input.GetKey(KeyCode.A))
+						relativePos += Vector2.left;
+					if (Input.GetKey(KeyCode.D))
+						relativePos += Vector2.right;
+					break;
+				case ContolType.ZQSD:
+					if (Input.GetKey(KeyCode.S))
+						relativePos += Vector2.down;
+					if (Input.GetKey(KeyCode.Z))
+						relativePos += Vector2.up;
+					if (Input.GetKey(KeyCode.Q))
+						relativePos += Vector2.left;
+					if (Input.GetKey(KeyCode.D))
+						relativePos += Vector2.right;
+					break;
 			}
-			else if (Input.GetMouseButtonUp(0) && slideStartMarker != null)
-			{
-				Destroy(slideStartMarker);
-				slideStartMarker = null;
-			}
-			else if (Input.GetMouseButton(0))
-			{
-				relativePos = (Vector2)GameManager.instance.mainCam.ScreenToWorldPoint(Input.mousePosition) - slideStart;
-			}
+
 		}
 
 		// Get movement if phone
